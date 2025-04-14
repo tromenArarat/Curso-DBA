@@ -45,29 +45,47 @@ descripción comience con la letra A.
 		 	where cod_mat in (1, 3, 6, 9, 18);
 			
 
-4. Listar código y nombre de proveedores de Suipacha que hayan sido dados
+4. Listar código y nombre de proveedores de la calle Suipacha que hayan sido dados
 de alta en el año 2001. 
-	select cod_prov, nombre 
-	from proveedor 
-	where ciudad equal 'suipacha'
-	and fecha_alta is between 01ene01 and 31dic01;
+	SELECT cod_prov, nombre 
+	FROM PROVEEDOR 
+	WHERE domicilio LIKE '%suipacha%'
+	AND fecha_alta BETWEEN '2001-01-01' AND '2001-12-31';
 	
 5. Listar nombre de todos los proveedores y de su ciudad.
-	select nombre,ciudad from proveedor;
+	select p.nombre, c.nombre
+	from PROVEEDOR as p
+	inner join CIUDAD as c ON c.cod_ciu = p.cod_ciu;
 
 6. Listar los nombres de los proveedores de la ciudad de La Plata.
-	select nombre 
-	from proveedor 
-	where ciudad = 'La Plata';
+	select p.nombre 
+	from PROVEEDOR as p
+	inner join CIUDAD as c ON c.cod_ciu = p.cod_ciu 
+	where c.nombre = 'La Plata';
 	
 7. Listar los números de almacenes que almacenan el artículo de descripción A.
-	select count(nro) 
-	from almacen
-	inner join articulo
-	where articulo.descripcion like 'A%'
+	SELECT DISTINCT a.nro
+	FROM ALMACEN a
+	INNER JOIN CONTIENE c ON a.nro = c.nro
+	INNER JOIN ARTICULO ar ON c.cod_art = ar.cod_art
+	WHERE ar.descripcion LIKE '%Buzo%';
+	
+		Mejorada --> 	SELECT DISTINCT a.nro, a.nombre as negocio, ar.descripcion, COUNT(*) as cantidad 
+				FROM ALMACEN a
+				INNER JOIN CONTIENE c ON a.nro = c.nro
+				INNER JOIN ARTICULO ar ON c.cod_art = ar.cod_art
+				WHERE ar.descripcion LIKE '%Buzo%'
+				GROUP BY a.nro, a.nombre, ar.descripcion;
 
 8. Listar los materiales (código y descripción) provistos por proveedores de la ciudad
 de Rosario.
+
+	select m.cod_mat, m.descripcion 
+	from PROVISTO_POR pp 
+	inner join PROVEEDOR p ON p.cod_prov = pp.cod_prov 
+	inner join MATERIAL m ON m.cod_mat = pp.cod_mat
+	inner join CIUDAD c ON c.cod_ciu = p.cod_ciu
+	where c.nombre = 'Rosario';
 
 9. Listar los nombres de los proveedores que proveen materiales para artículos
 ubicados en almacenes que Martín Gómez tiene a su cargo.
