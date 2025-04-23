@@ -90,6 +90,15 @@ de Rosario.
 9. Listar los nombres de los proveedores que proveen materiales para artículos
 ubicados en almacenes que Martín Gómez tiene a su cargo.
 
+	select p.nombre
+	from PROVEEDOR p
+	inner join PROVISTO_POR pp ON p.cod_prov = pp.cod_prov
+	inner join MATERIAL m ON m.cod_mat = pp.cod_mat
+	inner join COMPUESTO_POR c on c.cod_mat = pp.cod_mat
+	inner join CONTIENE ct on ct.cod_art = c.cod_art
+	inner join ALMACEN a on a.nro = ct.nro
+	where a.responsable = 'Martín Gómez';
+
 10. Mover los artículos almacenados en el almacén de número 10 al de número 20.
 
 11. Eliminar a los proveedores que contengan la palabra ABC en su nombre
